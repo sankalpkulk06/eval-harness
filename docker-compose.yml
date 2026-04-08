@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: ankane/pgvector
+    environment:
+      POSTGRES_DB: ragdb
+      POSTGRES_USER: raguser
+      POSTGRES_PASSWORD: ragpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U raguser -d ragdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  harness:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      PGVECTOR_DSN: postgresql://raguser:ragpass@postgres:5432/ragdb
+    volumes:
+      - ./reports:/app/reports
+      - ./data:/app/data
+      - ./configs:/app/configs
+
+volumes:
+  pgdata:
