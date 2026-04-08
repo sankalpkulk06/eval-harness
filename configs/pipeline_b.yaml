@@ -1,0 +1,12 @@
+name: pipeline_b
+retriever:
+  type: pgvector
+  table: documents
+  top_k: 3
+generator:
+  type: openai
+  model: gpt-4o
+metrics:
+  - type: latency
+  - type: ragas_faithfulness
+  - type: llm_judge

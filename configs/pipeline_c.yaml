@@ -1,0 +1,12 @@
+name: pipeline_c
+retriever:
+  type: pinecone
+  index_name: rag-eval-index
+  top_k: 10
+generator:
+  type: openai
+  model: gpt-4o
+metrics:
+  - type: latency
+  - type: ragas_faithfulness
+  - type: llm_judge
