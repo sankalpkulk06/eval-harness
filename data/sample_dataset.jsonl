@@ -1,0 +1,5 @@
+{"question": "What is the purpose of the rag-eval-harness?", "ground_truth": "It evaluates RAG pipelines by measuring retrieval quality, generation quality, and latency across different configurations."}
+{"question": "How does the EvalRunner load a retriever?", "ground_truth": "It reads the retriever type from the YAML config and looks up the corresponding class in RETRIEVER_REGISTRY, then instantiates it with the config dict."}
+{"question": "What embedding model do the retrievers use?", "ground_truth": "Both Pinecone and pgvector retrievers use OpenAI's text-embedding-3-small model to embed questions before querying."}
+{"question": "How does the LLM judge metric normalize its score?", "ground_truth": "The LLM judge asks GPT-4o to rate the answer 1-5, then divides the integer score by 5.0 to produce a float between 0.2 and 1.0."}
+{"question": "How do you add a custom retriever to the harness?", "ground_truth": "Create a class that extends BaseRetriever, decorate it with @register_retriever('your_type'), add an import in runner.py, and set type: your_type in the YAML config."}
