@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-eval-harness
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rag-eval-harness
+  template:
+    metadata:
+      labels:
+        app: rag-eval-harness
+    spec:
+      containers:
+        - name: harness
+          image: rag-eval-harness:latest
+          args:
+            - run
+            - --config
+            - /etc/pipeline/pipeline.yaml
+            - --dataset
+            - /app/data/sample_dataset.jsonl
+          envFrom:
+            - secretRef:
+                name: rag-eval-secrets
+          volumeMounts:
+            - name: pipeline-config
+              mountPath: /etc/pipeline
+            - name: reports
+              mountPath: /app/reports
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+      volumes:
+        - name: pipeline-config
+          configMap:
+            name: rag-eval-pipeline-config
+        - name: reports
+          emptyDir: {}
